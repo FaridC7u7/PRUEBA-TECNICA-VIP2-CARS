@@ -1,0 +1,93 @@
+-- CREACIÓN DE LA BASE DE DATOS ENCUESTAS ANONIMAS
+CREATE DATABASE IF NOT EXISTS vip2cars_surveys_db;
+USE vip2cars_surveys_db;
+
+-- TABLA PARA EL SISTEMA DE ENCUESTAS ANÓNIMAS -----------------------
+
+-- TABLA DE ENCUESTAS
+CREATE TABLE IF NOT EXISTS surveys (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- TABLA DE PREGUNTAS
+CREATE TABLE IF NOT EXISTS questions (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    survey_id INT NOT NULL,
+    question_text TEXT NOT NULL,
+    FOREIGN KEY (survey_id) REFERENCES surveys(id) ON DELETE CASCADE
+);
+
+-- TABLA DE RESPUESTAS
+CREATE TABLE IF NOT EXISTS answers (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    question_id INT NOT NULL,
+    answer_text TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (question_id) REFERENCES questions(id) ON DELETE CASCADE
+);
+
+-- ---------------------------------------------------------------------
+
+-- CREACIÓN DE LA BASE DE DATOS VIP2CARS CRUD
+CREATE DATABASE IF NOT EXISTS vip2cars_db;
+USE vip2cars_db;
+
+-- TABLAS PARA EL CRUD DE VEHÍCULOS Y CLIENTES CON LOGIN ---------------
+
+-- TABLA DE USUARIOS (LOGIN)
+CREATE TABLE IF NOT EXISTS users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- TABLA TIPO DE DOCUMENTO
+CREATE TABLE IF NOT EXISTS document_type (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) UNIQUE NOT NULL,
+    digits INT NOT NULL,
+    single_numbers BOOLEAN DEFAULT FALSE;
+);
+
+-- TABLA DE CLIENTES
+CREATE TABLE IF NOT EXISTS clients (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    last_name VARCHAR(100) NOT NULL,
+    document_type_id INT NOT NULL,
+    document_number VARCHAR(50) NOT NULL,
+    email VARCHAR(100) UNIQUE,
+    phone VARCHAR(20),
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    created_by INT,
+    updated_by INT,
+    FOREIGN KEY (document_type_id) REFERENCES document_type(id),
+    FOREIGN KEY (created_by) REFERENCES users(id),
+    FOREIGN KEY (updated_by) REFERENCES users(id)
+);
+
+-- TABLA DE VEHÍCULOS
+CREATE TABLE IF NOT EXISTS vehicles (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    plate VARCHAR(6) UNIQUE NOT NULL,
+    brand VARCHAR(50) NOT NULL,
+    model VARCHAR(50) NOT NULL,
+    year INT,
+    client_id INT NOT NULL,
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    created_by INT,
+    updated_by INT,
+    FOREIGN KEY (client_id) REFERENCES clients(id) ON DELETE CASCADE,
+    FOREIGN KEY (created_by) REFERENCES users(id),
+    FOREIGN KEY (updated_by) REFERENCES users(id)
+);
