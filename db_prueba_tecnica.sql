@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS document_type (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(50) UNIQUE NOT NULL,
     digits INT NOT NULL,
-    single_numbers BOOLEAN DEFAULT FALSE;
+    single_numbers BOOLEAN DEFAULT FALSE
 );
 
 -- TABLA DE CLIENTES
