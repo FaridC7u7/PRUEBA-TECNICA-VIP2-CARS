@@ -91,3 +91,8 @@ CREATE TABLE IF NOT EXISTS vehicles (
     FOREIGN KEY (created_by) REFERENCES users(id),
     FOREIGN KEY (updated_by) REFERENCES users(id)
 );
+
+-- INSERTS
+INSERT INTO document_type (id, name, digits, single_numbers) VALUES (1, 'DNI', 8, 1);
+INSERT INTO document_type (id, name, digits, single_numbers) VALUES (2, 'PASAPORTE', 44, 0);
+INSERT INTO document_type (id, name, digits, single_numbers) VALUES (3, 'CARNET DE EXTRANGERIA', 20, 0);
